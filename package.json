@@ -5,7 +5,8 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "live": "nodemon index.js"
   },
   "engines": {
     "node": ">= 12.0.0"
@@ -13,6 +14,10 @@
   "author": "Google LLC",
   "license": "Apache-2.0",
   "dependencies": {
+    "critical": "^4.0.1",
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
   }
 }
