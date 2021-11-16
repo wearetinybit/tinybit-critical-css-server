@@ -1,6 +1,7 @@
 const express = require('express');
 const critical = require('critical');
 const fs = require('fs');
+const tmp = require('tmp');
 const app = express();
 app.use(express.json({limit: '10mb'}));
 
@@ -9,13 +10,14 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', async (req, res) => {
-  await fs.promises.appendFile('/tmp/critical-css', req.body.css);
+  const cssFile = tmp.tmpNameSync();
+  await fs.promises.appendFile(cssFile, req.body.css);
   const { css, html, uncritical } = await critical.generate({
-    css: '/tmp/critical-css',
+    css: cssFile,
     html: req.body.html,
     inline: false,
   })
-  await fs.promises.unlink('/tmp/critical-css')
+  await fs.promises.unlink(cssFile)
   res.send({
     css: css,
   });

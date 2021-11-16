@@ -15,7 +15,8 @@
   "license": "Apache-2.0",
   "dependencies": {
     "critical": "^4.0.1",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "tmp": "^0.2.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
