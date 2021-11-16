@@ -12,6 +12,21 @@ app.get('/', (req, res) => {
 app.post('/', async (req, res) => {
   const cssFile = tmp.tmpNameSync();
   await fs.promises.appendFile(cssFile, req.body.css);
+
+  const dimensions = [
+    {
+      height: 640,
+      width: 360,
+    },
+    {
+      height: 1024,
+      width: 768,
+    },
+    {
+      height: 1300,
+      width: 900,
+    },
+  ];
   const { css, html, uncritical } = await critical.generate({
     css: cssFile,
     html: req.body.html,
