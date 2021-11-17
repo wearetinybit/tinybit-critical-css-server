@@ -1,7 +1,7 @@
 {
-  "name": "helloworld",
+  "name": "tinybit-critical-css-server",
   "description": "Simple hello world sample in Node",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "main": "index.js",
   "scripts": {
@@ -11,8 +11,8 @@
   "engines": {
     "node": ">= 12.0.0"
   },
-  "author": "Google LLC",
-  "license": "Apache-2.0",
+  "author": "TinyBit, LLC",
+  "license": "MIT",
   "dependencies": {
     "critical": "^4.0.1",
     "express": "^4.17.1",
