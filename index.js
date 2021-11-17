@@ -11,8 +11,6 @@ app.get('/', (req, res) => {
 
 app.post('/', async (req, res) => {
   const cssFile = tmp.tmpNameSync();
-  await fs.promises.appendFile(cssFile, req.body.css);
-
   const dimensions = [
     {
       height: 640,
@@ -27,22 +25,27 @@ app.post('/', async (req, res) => {
       width: 900,
     },
   ];
-  const { css, html, uncritical } = await critical.generate({
-    css: cssFile,
-    html: req.body.html,
-    inline: false,
-    penthouse: {
-      puppeteer: {
-        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
-        args: ['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage'],
-        ignoreDefaultArgs: ['--disable-extensions']
-      },
-    }
-  })
-  await fs.promises.unlink(cssFile)
-  res.send({
-    css: css,
-  });
+  try {
+    await fs.promises.appendFile(cssFile, req.body.css);
+    const { css, html, uncritical } = await critical.generate({
+      css: cssFile,
+      html: req.body.html,
+      inline: false,
+      penthouse: {
+        puppeteer: {
+          executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
+          args: ['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage'],
+          ignoreDefaultArgs: ['--disable-extensions']
+        },
+      }
+    });
+    await fs.promises.unlink(cssFile);
+    res.send({
+      css: css,
+    });
+  } catch( err ) {
+    res.status(400).send(err.message);
+  }
 })
 
 const port = process.env.PORT || 8080;
