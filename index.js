@@ -28,6 +28,7 @@ app.post('/', async (req, res) => {
   try {
     await fs.promises.appendFile(cssFile, req.body.css);
     const { css, html, uncritical } = await critical.generate({
+      concurrency: 1, // https://github.com/addyosmani/critical/issues/364#issuecomment-493865206
       css: cssFile,
       html: req.body.html,
       inline: false,
