@@ -30,9 +30,21 @@ app.post('/', async (req, res) => {
       inline: false,
       penthouse: {
         puppeteer: {
+          headless: true,
           executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
-          args: ['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage'],
-          ignoreDefaultArgs: ['--disable-extensions']
+          args: [
+            '--no-sandbox',
+            '--disable-gpu',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--proxy-server="direct://"',
+            '--proxy-bypass-list=*',
+            '--no-zygote',
+            '--single-process'
+          ],
+          ignoreDefaultArgs: [
+            '--disable-extensions'
+          ]
         },
       }
     });
