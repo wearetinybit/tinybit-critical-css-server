@@ -33,7 +33,7 @@ app.post('/', async (req, res) => {
     inline: false,
     penthouse: {
       puppeteer: {
-        args: ['--no-sandbox'],
+        args: ['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage'],
         ignoreDefaultArgs: ['--disable-extensions']
       },
     }
