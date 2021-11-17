@@ -33,6 +33,7 @@ app.post('/', async (req, res) => {
     inline: false,
     penthouse: {
       puppeteer: {
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
         args: ['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage'],
         ignoreDefaultArgs: ['--disable-extensions']
       },
