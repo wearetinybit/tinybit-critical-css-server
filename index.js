@@ -17,10 +17,6 @@ app.post('/', async (req, res) => {
       width: 360,
     },
     {
-      height: 1024,
-      width: 768,
-    },
-    {
       height: 1300,
       width: 900,
     },
