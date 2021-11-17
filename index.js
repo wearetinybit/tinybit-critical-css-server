@@ -31,6 +31,12 @@ app.post('/', async (req, res) => {
     css: cssFile,
     html: req.body.html,
     inline: false,
+    penthouse: {
+      puppeteer: {
+        args: ['--no-sandbox'],
+        ignoreDefaultArgs: ['--disable-extensions']
+      },
+    }
   })
   await fs.promises.unlink(cssFile)
   res.send({
