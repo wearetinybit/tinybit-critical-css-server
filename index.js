@@ -14,16 +14,10 @@ app.post('/', async (req, res) => {
   const browser = await puppeteer.launch({
     headless: true,
     executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
-    ignoreHTTPSErrors: true,
     args: [
       '--no-sandbox',
-      '--disable-gpu',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
-      '--proxy-server="direct://"',
-      '--proxy-bypass-list=*',
-      '--no-zygote',
-      '--single-process'
     ],
     defaultViewport: {
       width: 1300,
