@@ -12,6 +12,7 @@ app.get('/', (req, res) => {
 
 app.post('/', async (req, res) => {
   const browserPromise = puppeteer.launch({
+    headless: false,
     executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
     ignoreHTTPSErrors: true,
     args: [
