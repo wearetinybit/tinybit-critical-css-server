@@ -11,8 +11,8 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', async (req, res) => {
-  const browserPromise = puppeteer.launch({
-    headless: false,
+  const browser = await puppeteer.launch({
+    headless: true,
     executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
     ignoreHTTPSErrors: true,
     args: [
@@ -50,7 +50,7 @@ app.post('/', async (req, res) => {
       inline: false,
       penthouse: {
         puppeteer: {
-          getBrowser: () => browserPromise,
+          getBrowser: () => browser,
         }
       }
     });
