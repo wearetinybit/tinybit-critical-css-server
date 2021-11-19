@@ -1,9 +1,29 @@
 const express = require('express');
 const critical = require('critical');
+const puppeteer = require('puppeteer');
 const fs = require('fs');
 const tmp = require('tmp');
 const app = express();
 app.use(express.json({limit: '10mb'}));
+
+const browserPromise = puppeteer.launch({
+  executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
+  ignoreHTTPSErrors: true,
+  args: [
+    '--no-sandbox',
+    '--disable-gpu',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage',
+    '--proxy-server="direct://"',
+    '--proxy-bypass-list=*',
+    '--no-zygote',
+    '--single-process'
+  ],
+  defaultViewport: {
+    width: 1300,
+    height: 900
+  }
+});
 
 app.get('/', (req, res) => {
   res.send('This is a server that generates critical CSS');
@@ -30,22 +50,8 @@ app.post('/', async (req, res) => {
       inline: false,
       penthouse: {
         puppeteer: {
-          headless: true,
-          executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
-          args: [
-            '--no-sandbox',
-            '--disable-gpu',
-            '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage',
-            '--proxy-server="direct://"',
-            '--proxy-bypass-list=*',
-            '--no-zygote',
-            '--single-process'
-          ],
-          ignoreDefaultArgs: [
-            '--disable-extensions'
-          ]
-        },
+          getBrowser: () => browserPromise,
+        }
       }
     });
     await fs.promises.unlink(cssFile);
