@@ -31,3 +31,5 @@ Run as a Google Cloud Function:
 tinybit-critical-css-server implements a simple HTTP API.
 
 Simply `POST /` with `html` and `css` to receive `css` in response.
+
+Check out [tinybit-critical-css-plugin](https://github.com/pinchofyum/tinybit-critical-css-plugin/) for integration with WordPress.
