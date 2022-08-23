@@ -1,6 +1,6 @@
 {
   "name": "tinybit-critical-css-server",
-  "description": "Simple hello world sample in Node",
+  "description": "Generate critical CSS for POSTed HTML and CSS",
   "version": "0.1.0",
   "private": true,
   "main": "index.js",
