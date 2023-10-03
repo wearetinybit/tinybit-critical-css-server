@@ -553,12 +553,6 @@ h1 {
 	}
 }
 
-@media screen and (min-width:992px) {
-	.poy-breadcrumb-container {
-		box-shadow: none
-	}
-}
-
 .poy-breadcrumb {
 	display: inline-flex;
 	padding-left: 1rem;
@@ -587,6 +581,10 @@ h1 {
 }
 
 @media screen and (min-width:992px) {
+	.poy-breadcrumb-container {
+		box-shadow: none
+	}
+
 	.poy-breadcrumb .breadcrumb_last, .poy-breadcrumb a {
 		overflow-x: auto;
 		white-space: normal
