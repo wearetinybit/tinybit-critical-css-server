@@ -40,6 +40,11 @@ The `test-src/` directory in this repository has a `response.json` with the CSS 
 
 1. `POST` this data to the local critical CSS server started with `npm run start`.
 2. Decode the JSON response and capture the return value for the `css` property.
-3. Auto-format the CSS and compare via diff with the stored version.
+  * Save this to a `response.json` file in a WordPress project's `wp-content` directory
+  * `wp shell`
+  * `$decoded = json_decode( file_get_contents( WP_CONTENT_DIR . '/response.json' ) )`
+  * `$decoded->css`
+  * Paste in this project's `response.css` file.
+3. Auto-format the CSS with VS Code's CSS Formatter and compare via diff with the stored version.
 
 (These could be better automated, but we really don't update it a lot.)
