@@ -863,73 +863,73 @@ h1.entry-title {
 }
 
 @media (min-width:640px) {
-	.sm\\:mt-2 {
+	.sm\:mt-2 {
 		margin-top: .5rem
 	}
 
-	.sm\\:flex {
+	.sm\:flex {
 		display: flex
 	}
 
-	.sm\\:w-64 {
+	.sm\:w-64 {
 		width: 16rem
 	}
 
-	.sm\\:items-center {
+	.sm\:items-center {
 		align-items: center
 	}
 
-	.sm\\:justify-between {
+	.sm\:justify-between {
 		justify-content: space-between
 	}
 }
 
 @media (min-width:768px) {
-	.md\\:relative {
+	.md\:relative {
 		position: relative
 	}
 
-	.md\\:z-auto {
+	.md\:z-auto {
 		z-index: auto
 	}
 
-	.md\\:block {
+	.md\:block {
 		display: block
 	}
 
-	.md\\:grid {
+	.md\:grid {
 		display: grid
 	}
 
-	.md\\:hidden {
+	.md\:hidden {
 		display: none
 	}
 
-	.md\\:max-w-6xl {
+	.md\:max-w-6xl {
 		max-width: 72rem
 	}
 
-	.md\\:border-b-3 {
+	.md\:border-b-3 {
 		border-bottom-width: 3px
 	}
 
-	.md\\:border-transparent {
+	.md\:border-transparent {
 		border-color: transparent
 	}
 
-	.md\\:pt-8 {
+	.md\:pt-8 {
 		padding-top: 2rem
 	}
 
-	.md\\:pb-1 {
+	.md\:pb-1 {
 		padding-bottom: .25rem
 	}
 
-	.md\\:text-sm {
+	.md\:text-sm {
 		font-size: .875rem
 	}
 
-	.md\\:shadow-none {
+	.md\:shadow-none {
 		--tw-shadow: 0 0 #0000;
 		--tw-shadow-colored: 0 0 #0000;
 		box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
@@ -937,16 +937,16 @@ h1.entry-title {
 }
 
 @media (min-width:1024px) {
-	.lg\\:mx-auto {
+	.lg\:mx-auto {
 		margin-left: auto;
 		margin-right: auto
 	}
 
-	.lg\\:max-w-6xl {
+	.lg\:max-w-6xl {
 		max-width: 72rem
 	}
 
-	.lg\\:overflow-x-auto {
+	.lg\:overflow-x-auto {
 		overflow-x: auto
 	}
 }
