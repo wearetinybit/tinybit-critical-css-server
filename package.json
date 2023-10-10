@@ -15,7 +15,7 @@
   "author": "TinyBit, LLC",
   "license": "MIT",
   "dependencies": {
-    "critical": "^6.0.0",
+    "critical": "^6.0.4",
     "express": "^4.18.2",
     "puppeteer": "^21.3.6",
     "tmp": "^0.2.1"
