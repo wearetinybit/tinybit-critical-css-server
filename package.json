@@ -11,7 +11,7 @@
     "test:fix": "stylelint --fix 'test-src/response.css'"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "author": "TinyBit, LLC",
   "license": "MIT",
