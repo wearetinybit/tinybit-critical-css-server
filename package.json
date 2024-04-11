@@ -7,7 +7,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "live": "nodemon index.js"
+    "live": "nodemon index.js",
+    "test:fix": "stylelint --fix 'test-src/response.css'"
   },
   "engines": {
     "node": ">=18"
@@ -21,6 +22,9 @@
     "tmp": "^0.2.1"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.1.0",
+    "prettier": "^3.2.5",
+    "stylelint": "^16.3.1",
+    "stylelint-prettier": "^5.0.0"
   }
 }
