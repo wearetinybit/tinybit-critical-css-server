@@ -7,20 +7,24 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "live": "nodemon index.js"
+    "live": "nodemon index.js",
+    "test:fix": "stylelint --fix 'test-src/response.css'"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "author": "TinyBit, LLC",
   "license": "MIT",
   "dependencies": {
-    "critical": "^6.0.0",
-    "express": "^4.18.2",
-    "puppeteer": "^21.3.6",
-    "tmp": "^0.2.1"
+    "critical": "^7.1.1",
+    "express": "^4.19.2",
+    "puppeteer": "^22.6.4",
+    "tmp": "^0.2.3"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.1.0",
+    "prettier": "^3.2.5",
+    "stylelint": "^16.3.1",
+    "stylelint-prettier": "^5.0.0"
   }
 }

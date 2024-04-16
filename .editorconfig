@@ -1,0 +1,4 @@
+root=true
+
+[*.css]
+indent_style = tab
