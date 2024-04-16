@@ -22,6 +22,12 @@ The critical CSS server will now be running at something like http://tinybit-cri
 curl -d @test-src/request.json -H "Content-Type: application/json" -X POST http://tinybit-critical-css-server.test:8080 | jq -r '.css' > test-src/response.css && npm run test:fix
 ```
 
+To test the production response:
+
+```bash
+curl -d @test-src/request.json -H "Content-Type: application/json" -X POST https://criticalcss-fd290eb.tinybit.com/ | jq -r '.css' > test-src/response.css && npm run test:fix
+```
+
 ### Google Cloud Function
 
 Run as a Google Cloud Function:
