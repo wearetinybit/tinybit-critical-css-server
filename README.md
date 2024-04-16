@@ -16,7 +16,7 @@ npm install
 npm start
 ```
 
-The critical CSS server will now be running at something like http://tinybit-critical-css-server:8080, which can be used with the following to confirm that the generated critical CSS has not changed:
+The critical CSS server will now be running at something like http://tinybit-critical-css-server.test:8080, which can be used with the following to confirm that the generated critical CSS has not changed:
 
 ```bash
 curl -d @test-src/request.json -H "Content-Type: application/json" -X POST http://tinybit-critical-css-server.test:8080 | jq -r '.css' > test-src/response.css && npm run test:fix
