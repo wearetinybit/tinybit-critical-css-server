@@ -16,15 +16,15 @@
   "author": "TinyBit, LLC",
   "license": "MIT",
   "dependencies": {
-    "critical": "^7.1.1",
+    "critical": "^7.2.0",
     "express": "^4.19.2",
-    "puppeteer": "^22.6.5",
+    "puppeteer": "^23.1.0",
     "tmp": "^0.2.3"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0",
-    "prettier": "^3.2.5",
-    "stylelint": "^16.3.1",
-    "stylelint-prettier": "^5.0.0"
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3",
+    "stylelint": "^16.8.2",
+    "stylelint-prettier": "^5.0.2"
   }
 }
