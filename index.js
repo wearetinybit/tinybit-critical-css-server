@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
 
 app.post('/', async (req, res) => {
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: 'shell',
     executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
     args: [
       '--no-sandbox',
