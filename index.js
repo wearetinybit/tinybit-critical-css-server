@@ -13,33 +13,44 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', async (req, res) => {
-  const browser = await puppeteer.launch({
-    headless: true,
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-    ],
-    defaultViewport: {
-      width: 1300,
-      height: 900
-    }
-  });
+	let browser;
+
+
   const cssFile = tmp.tmpNameSync();
-  const dimensions = [
-    {
-      height: 640,
-      width: 360,
-    },
-    {
-      height: 1300,
-      width: 900,
-    },
-  ];
+
+	console.log( 'Before browser launch, CSS file:' + cssFile );
+
   try {
+    console.log('Starting browser launch...');
+
+    const browserLaunchPromise = puppeteer.launch({
+      headless: 'new',
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+      ],
+      defaultViewport: {
+        width: 1300,
+        height: 900
+      }
+    });
+
+    // Set a timeout for browser launch
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Browser launch timed out after 30 seconds')), 30000)
+    );
+
+    browser = await Promise.race([browserLaunchPromise, timeoutPromise]);
+
+    console.log('Browser launched successfully');
+
     await fs.promises.appendFile(cssFile, req.body.css);
-    const { css, html, uncritical } = await generate({
+
+	  console.log( 'After writing css' );
+
+    const { css } = await generate({
       concurrency: 1, // https://github.com/addyosmani/critical/issues/364#issuecomment-493865206
       css: cssFile,
       html: req.body.html,
@@ -50,12 +61,22 @@ app.post('/', async (req, res) => {
         }
       }
     });
+
+	console.log( 'After generating critical css' );
+
     await fs.promises.unlink(cssFile);
+
+	console.log( 'Sending response' );
+
     res.send({
       css: css,
     });
   } catch( err ) {
     res.status(400).send(err.message);
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
   }
 })
 

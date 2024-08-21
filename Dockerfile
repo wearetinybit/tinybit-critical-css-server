@@ -1,14 +1,23 @@
-FROM ghcr.io/puppeteer/puppeteer:23.1.0
+FROM node:20-alpine
+
+# Installs latest Chromium (92) package.
+RUN apk add --no-cache \
+      chromium \
+      nss \
+      freetype \
+      harfbuzz \
+      ca-certificates \
+      ttf-freefont
 
 # Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
-ENV DEBUG=penthouse,penthouse:core
-
-WORKDIR /home/pptruser
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser \
+    DEBUG=penthouse,penthouse:core
 
 # Copy application dependency manifests to the container image.
 # A wildcard is used to ensure both package.json AND package-lock.json are copied.
 # Copying this separately prevents re-running npm install on every code change.
-COPY --chown=pptruser:pptruser package*.json ./
+COPY package*.json ./
 
 # Install dependencies.
 RUN ls -lrth && npm install --omit=dev
