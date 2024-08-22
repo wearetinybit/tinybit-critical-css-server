@@ -19,6 +19,10 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
 # Copying this separately prevents re-running npm install on every code change.
 COPY package*.json ./
 
+RUN echo "Node version: $(node --version)"
+RUN echo "NPM version: $(npm --version)"
+RUN echo "Chromium version: $(chromium-browser --version)"
+
 # Install dependencies.
 RUN npm install --production
 
