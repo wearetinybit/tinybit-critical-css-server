@@ -1,13 +1,32 @@
 import express from 'express';
 import { generate } from 'critical';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
 import fs from 'fs';
-import path from 'path';
 import tmp from 'tmp';
+import chromium from '@sparticuz/chromium';
 
 const app = express();
 
 app.use(express.json({ limit: '10mb' }));
+
+async function getBrowser() {
+	try {
+		const browser = puppeteer.launch({
+			args: chromium.args,
+			defaultViewport: {
+				width: 1300,
+				height: 900,
+			},
+			executablePath: await chromium.executablePath(),
+			headless: chromium.headless,
+			ignoreHTTPSErrors: true,
+		});
+
+		return browser;
+	} catch (error) {
+		console.log('Error launching browser:', error);
+	}
+}
 
 app.get('/', (req, res) => {
 	res.send('This is a server that generates critical CSS');
@@ -16,32 +35,19 @@ app.get('/', (req, res) => {
 app.post('/', async (req, res) => {
 	console.log('POST request received');
 
+	let browser;
+	let cssFile;
+
 	try {
 		console.log('Trigger browser launch');
 
-		const browser = await puppeteer.launch({
-			headless: 'shell',
-			executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
-			args: [
-				'--no-sandbox',
-				'--disable-setuid-sandbox',
-				'--disable-dev-shm-usage',
-			],
-			defaultViewport: {
-				width: 1300,
-				height: 900
-			}
-		});
+		browser = await getBrowser();
 
 		console.log('Create temp CSS file');
-
-		const cssFile = tmp.tmpNameSync();
-
-		await fs.promises.appendFile(cssFile, req.body.css);
+		cssFile = tmp.tmpNameSync();
+		await fs.promises.writeFile(cssFile, req.body.css);
 
 		console.log('Generate critical CSS');
-		console.log(browser);
-
 		const { css } = await generate({
 			concurrency: 1, // https://github.com/addyosmani/critical/issues/364#issuecomment-493865206
 			css: cssFile,
@@ -49,22 +55,30 @@ app.post('/', async (req, res) => {
 			inline: false,
 			penthouse: {
 				puppeteer: {
-					getBrowser: () => browser,
+					getBrowser: browser,
 				}
 			}
 		});
 
-		await fs.promises.unlink(cssFile);
-
-		console.log('Send response');
+		console.log('Critical CSS generated successfully');
 
 		res.send({
 			css: css,
 		});
 	} catch (err) {
-		res.status(400).send(err.message);
+		console.error('Error:', err);
+		res.status(500).send(`Error: ${err.message}`);
+	} finally {
+		if (browser) {
+			try {
+				await browser.close();
+				console.log('Browser closed');
+			} catch (closeErr) {
+				console.error('Error closing browser:', closeErr);
+			}
+		}
 	}
-})
+});
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
