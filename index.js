@@ -66,23 +66,6 @@ app.post('/', async (req, res) => {
 	}
 })
 
-app.get('/debug/npm-log/:logName?', (req, res) => {
-	const logName = req.params.logName || '';
-	const logDir = '/root/.npm/_logs';
-
-	const files = fs.readdirSync(logDir);
-	const latestLog = files.sort().reverse()[0];
-	const logPath = path.join(logDir, logName || latestLog);
-
-	try {
-		console.log( 'Reading ' + logPath );
-		const logContent = fs.readFileSync(logPath, 'utf8');
-		res.send(logContent);
-	} catch (error) {
-		res.status(500).send(`Error reading log file: ${error.message}`);
-	}
-});
-
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
 	console.log(`tinybit-critical-css-server: listening on port ${port}`);
