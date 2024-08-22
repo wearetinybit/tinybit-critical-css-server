@@ -2,6 +2,7 @@ import express from 'express';
 import { generate } from 'critical';
 import puppeteer from 'puppeteer';
 import fs from 'fs';
+import path from 'path';
 import tmp from 'tmp';
 
 const app = express();
@@ -13,10 +14,10 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', async (req, res) => {
-	console.log( 'POST request received' );
+	console.log('POST request received');
 
 	try {
-		console.log( 'Trigger browser launch' );
+		console.log('Trigger browser launch');
 
 		const browser = await puppeteer.launch({
 			headless: 'shell',
@@ -32,14 +33,14 @@ app.post('/', async (req, res) => {
 			}
 		});
 
-		console.log( 'Create temp CSS file' );
+		console.log('Create temp CSS file');
 
 		const cssFile = tmp.tmpNameSync();
 
 		await fs.promises.appendFile(cssFile, req.body.css);
 
-		console.log( 'Generate critical CSS' );
-		console.log( browser );
+		console.log('Generate critical CSS');
+		console.log(browser);
 
 		const { css } = await generate({
 			concurrency: 1, // https://github.com/addyosmani/critical/issues/364#issuecomment-493865206
@@ -55,7 +56,7 @@ app.post('/', async (req, res) => {
 
 		await fs.promises.unlink(cssFile);
 
-		console.log( 'Send response' );
+		console.log('Send response');
 
 		res.send({
 			css: css,
@@ -64,6 +65,20 @@ app.post('/', async (req, res) => {
 		res.status(400).send(err.message);
 	}
 })
+
+app.get('/debug/npm-log', (req, res) => {
+	const logDir = '/root/.npm/_logs';
+	const files = fs.readdirSync(logDir);
+	const latestLog = files.sort().reverse()[0];
+	const logPath = path.join(logDir, latestLog);
+
+	try {
+		const logContent = fs.readFileSync(logPath, 'utf8');
+		res.send(logContent);
+	} catch (error) {
+		res.status(500).send(`Error reading log file: ${error.message}`);
+	}
+});
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
