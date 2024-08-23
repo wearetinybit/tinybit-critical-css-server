@@ -1,5 +1,8 @@
 FROM node:20
 
+RUN apt-get update \
+	&& apt-get install -y libnss3-dev
+
 ENV DEBUG=penthouse,penthouse:core
 
 # Copy application dependency manifests to the container image.
