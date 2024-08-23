@@ -11,16 +11,15 @@ app.use(express.json({ limit: '10mb' }));
 
 async function getBrowser() {
 	try {
-		const browser = puppeteer.launch({
+		const browser = await puppeteer.launch({
 			args: chromium.args,
-			defaultViewport: {
-				width: 1300,
-				height: 900,
-			},
 			executablePath: await chromium.executablePath(),
 			headless: chromium.headless,
 			ignoreHTTPSErrors: true,
 		});
+
+		const version = await browser.version();
+		console.log('Browser version:', version);
 
 		return browser;
 	} catch (error) {
@@ -33,8 +32,6 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', async (req, res) => {
-	console.log('POST request received');
-
 	let browser;
 	let cssFile;
 
@@ -43,24 +40,24 @@ app.post('/', async (req, res) => {
 
 		browser = await getBrowser();
 
-		console.log('Create temp CSS file');
 		cssFile = tmp.tmpNameSync();
 		await fs.promises.writeFile(cssFile, req.body.css);
 
 		console.log('Generate critical CSS');
+
 		const { css } = await generate({
 			concurrency: 1, // https://github.com/addyosmani/critical/issues/364#issuecomment-493865206
 			css: cssFile,
 			html: req.body.html,
 			inline: false,
+			width: 1300,
+			height: 900,
 			penthouse: {
 				puppeteer: {
-					getBrowser: browser,
-				}
+					getBrowser: async () => browser,
+				},
 			}
 		});
-
-		console.log('Critical CSS generated successfully');
 
 		res.send({
 			css: css,

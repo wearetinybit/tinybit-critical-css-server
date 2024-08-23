@@ -16,6 +16,12 @@ npm install
 npm start
 ```
 
+or
+
+```
+docker build -t tinybit-critical-css-server --progress=plain --platform linux/amd64 .
+```
+
 The critical CSS server will now be running at something like http://tinybit-critical-css-server.test:8080, which can be used with the following to confirm that the generated critical CSS has not changed:
 
 ```bash
@@ -27,6 +33,8 @@ To test the production response:
 ```bash
 curl -d @test-src/request.json -H "Content-Type: application/json" -X POST https://criticalcss-fd290eb.tinybit.com/ | jq -r '.css' > test-src/response.css && npm run test:fix
 ```
+
+The `test-src/` directory in this repository has a `response.json` with the CSS and HTML for an example request and a `response.css` containing the formatted expected CSS output. When the above commands are run, the `response.css` file should not change unless something expected has been modified in a dependency.
 
 ### Google Cloud Function
 
@@ -45,18 +53,3 @@ tinybit-critical-css-server implements a simple HTTP API.
 Simply `POST /` with `html` and `css` to receive `css` in response.
 
 Check out [tinybit-critical-css-plugin](https://github.com/pinchofyum/tinybit-critical-css-plugin/) for integration with WordPress.
-
-## Testing
-
-The `test-src/` directory in this repository has a `response.json` with the CSS and HTML for an example request.
-
-1. `POST` this data to the local critical CSS server started with `npm run start`.
-2. Decode the JSON response and capture the return value for the `css` property.
-  * Save this to a `response.json` file in a WordPress project's `wp-content` directory
-  * `wp shell`
-  * `$decoded = json_decode( file_get_contents( WP_CONTENT_DIR . '/response.json' ) )`
-  * `$decoded->css`
-  * Paste in this project's `response.css` file.
-3. Auto-format the CSS with VS Code's CSS Formatter and compare via diff with the stored version.
-
-(These could be better automated, but we really don't update it a lot.)
