@@ -18,7 +18,7 @@
   "dependencies": {
     "@sparticuz/chromium": "^127.0.0",
     "critical": "^7.2.0",
-    "express": "^4.19.2",
+    "express": "^4.20.0",
     "puppeteer-core": "23.1.1",
     "tmp": "^0.2.3"
   },
