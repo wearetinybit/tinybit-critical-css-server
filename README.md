@@ -20,6 +20,7 @@ or
 
 ```
 docker build -t tinybit-critical-css-server --progress=plain --platform linux/amd64 .
+docker run -p 8080:8080 tinybit-critical-css-server
 ```
 
 The critical CSS server will now be running at something like http://tinybit-critical-css-server.test:8080, which can be used with the following to confirm that the generated critical CSS has not changed:
