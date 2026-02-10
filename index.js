@@ -9,22 +9,46 @@ const app = express();
 
 app.use(express.json({ limit: '10mb' }));
 
+let browserInstance = null;
+let browserLaunching = null;
+
 async function getBrowser() {
-	try {
-		const browser = await puppeteer.launch({
-			args: chromium.args,
-			executablePath: await chromium.executablePath(),
-			headless: chromium.headless,
-			ignoreHTTPSErrors: true,
-		});
-
-		const version = await browser.version();
-		console.log('Browser version:', version);
-
-		return browser;
-	} catch (error) {
-		console.log('Error launching browser:', error);
+	// Reuse an existing connected browser.
+	if (browserInstance && browserInstance.connected) {
+		return browserInstance;
 	}
+
+	// If a launch is already in progress, wait for it instead of
+	// starting a second one (which causes ETXTBSY on the binary).
+	if (browserLaunching) {
+		return browserLaunching;
+	}
+
+	browserLaunching = (async () => {
+		try {
+			const browser = await puppeteer.launch({
+				args: chromium.args,
+				executablePath: await chromium.executablePath(),
+				headless: chromium.headless,
+				ignoreHTTPSErrors: true,
+			});
+
+			const version = await browser.version();
+			console.log('Browser version:', version);
+
+			browser.on('disconnected', () => {
+				console.log('Browser disconnected');
+				browserInstance = null;
+			});
+
+			browserInstance = browser;
+			return browser;
+		} finally {
+			browserLaunching = null;
+		}
+	})();
+
+	return browserLaunching;
 }
 
 app.get('/', (req, res) => {
@@ -32,13 +56,16 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', async (req, res) => {
-	let browser;
 	let cssFile;
 
 	try {
+		if (!req.body || !req.body.css || !req.body.html) {
+			return res.status(400).send('Missing required css or html field');
+		}
+
 		console.log('Trigger browser launch');
 
-		browser = await getBrowser();
+		const browser = await getBrowser();
 
 		cssFile = tmp.tmpNameSync();
 		await fs.promises.writeFile(cssFile, req.body.css);
@@ -53,6 +80,7 @@ app.post('/', async (req, res) => {
 			width: 1300,
 			height: 900,
 			penthouse: {
+				unstableKeepBrowserAlive: true,
 				puppeteer: {
 					getBrowser: async () => browser,
 				},
@@ -66,18 +94,22 @@ app.post('/', async (req, res) => {
 		console.error('Error:', err);
 		res.status(500).send(`Error: ${err.message}`);
 	} finally {
-		if (browser) {
-			try {
-				await browser.close();
-				console.log('Browser closed');
-			} catch (closeErr) {
-				console.error('Error closing browser:', closeErr);
-			}
+		if (cssFile) {
+			fs.promises.unlink(cssFile).catch(() => {});
 		}
 	}
 });
 
 const port = process.env.PORT || 8080;
-app.listen(port, () => {
+const server = app.listen(port, () => {
 	console.log(`tinybit-critical-css-server: listening on port ${port}`);
+});
+
+process.on('SIGTERM', async () => {
+	console.log('SIGTERM received, shutting down');
+	server.close();
+	if (browserInstance) {
+		await browserInstance.close().catch(() => {});
+	}
+	process.exit(0);
 });
