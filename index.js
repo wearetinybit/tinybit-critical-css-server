@@ -59,7 +59,7 @@ app.post('/', async (req, res) => {
 	let cssFile;
 
 	try {
-		if (!req.body.css || !req.body.html) {
+		if (!req.body || !req.body.css || !req.body.html) {
 			return res.status(400).send('Missing required css or html field');
 		}
 
