@@ -59,6 +59,10 @@ app.post('/', async (req, res) => {
 	let cssFile;
 
 	try {
+		if (!req.body.css || !req.body.html) {
+			return res.status(400).send('Missing required css or html field');
+		}
+
 		console.log('Trigger browser launch');
 
 		const browser = await getBrowser();
@@ -76,6 +80,7 @@ app.post('/', async (req, res) => {
 			width: 1300,
 			height: 900,
 			penthouse: {
+				unstableKeepBrowserAlive: true,
 				puppeteer: {
 					getBrowser: async () => browser,
 				},
@@ -96,6 +101,15 @@ app.post('/', async (req, res) => {
 });
 
 const port = process.env.PORT || 8080;
-app.listen(port, () => {
+const server = app.listen(port, () => {
 	console.log(`tinybit-critical-css-server: listening on port ${port}`);
+});
+
+process.on('SIGTERM', async () => {
+	console.log('SIGTERM received, shutting down');
+	server.close();
+	if (browserInstance) {
+		await browserInstance.close().catch(() => {});
+	}
+	process.exit(0);
 });
