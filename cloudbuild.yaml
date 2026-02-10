@@ -16,5 +16,9 @@
    - 'gcr.io/$_PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA'
    - '--region'
    - '$_REGION'
+   - '--memory'
+   - '1Gi'
+   - '--concurrency'
+   - '1'
  images:
  - 'gcr.io/$_PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA'
