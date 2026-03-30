@@ -24,5 +24,5 @@ RUN npm install --omit=dev
 # Copy local code to the container image.
 COPY . .
 
-# Run the web service on container startup.
-CMD [ "npm", "start" ]
+# Run node directly so SIGTERM is handled cleanly without npm's wrapper.
+CMD [ "node", "index.js" ]
