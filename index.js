@@ -2,6 +2,7 @@ import express from 'express';
 import { generate } from 'critical';
 import puppeteer from 'puppeteer-core';
 import fs from 'fs';
+import zlib from 'zlib';
 import tmp from 'tmp';
 import chromium from '@sparticuz/chromium';
 
@@ -87,8 +88,15 @@ app.post('/', async (req, res) => {
 			}
 		});
 
+		const gzipSize = zlib.gzipSync(css).byteLength;
+
+		const headMatch = req.body.html.match(/<head[\s>][\s\S]*?<\/head>/i);
+		const headGzipSize = headMatch ? zlib.gzipSync(headMatch[0]).byteLength : null;
+
 		res.send({
 			css: css,
+			gzipSize: gzipSize,
+			headGzipSize: headGzipSize,
 		});
 	} catch (err) {
 		console.error('Error:', err);
