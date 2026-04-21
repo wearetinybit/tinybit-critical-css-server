@@ -16,7 +16,7 @@
   "author": "TinyBit, LLC",
   "license": "MIT",
   "dependencies": {
-    "@sparticuz/chromium": "^143.0.4",
+    "@sparticuz/chromium": "^147.0.2",
     "critical": "^7.2.1",
     "express": "^5.2.1",
     "puppeteer-core": "24.40.0",
